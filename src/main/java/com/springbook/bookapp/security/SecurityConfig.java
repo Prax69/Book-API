@@ -20,6 +20,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // ✅ New way to disable CSRF
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/v2/api-docs",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
                         .anyRequest().authenticated()
@@ -27,6 +35,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
     public InMemoryUserDetailsManager userDetailsManager() {
 

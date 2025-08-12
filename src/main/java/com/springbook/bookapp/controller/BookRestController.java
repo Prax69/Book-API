@@ -5,10 +5,12 @@ import com.springbook.bookapp.entity.BookDTO;
 import com.springbook.bookapp.exceptions.BookNotFoundException;
 import com.springbook.bookapp.service.BookService;
 import com.springbook.bookapp.entity.BookMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/books")
@@ -37,14 +39,14 @@ public class BookRestController {
 
     // Create a new book
     @PostMapping
-    public ResponseEntity<String> addBook(@RequestBody BookDTO bookDTO) {
-        if (bookDTO.getTitle() == null ||
-                bookDTO.getAuthor() == null ||
-                bookDTO.getPublicationYear() <= 1800 ||
-                bookDTO.getPublicationYear() > 2025) {
-            return ResponseEntity.badRequest().body("Invalid book data provided");
-        }
-
+    public ResponseEntity<String> addBook(@Valid @RequestBody BookDTO bookDTO) {
+//        if ((bookDTO.getTitle()).isEmpty()  ||
+//                bookDTO.getAuthor().isEmpty() ||
+//                bookDTO.getPublicationYear() <= 1800 ||
+//                bookDTO.getPublicationYear() > 2025
+//        ) {
+//            return ResponseEntity.badRequest().body("Invalid book data provided");
+//        }
         bookService.save(bookDTO);
         return ResponseEntity.status(201).body("Book added successfully");
     }
