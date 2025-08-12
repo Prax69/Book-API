@@ -1,41 +1,48 @@
 package com.springbook.bookapp.service;
 
 import com.springbook.bookapp.entity.Book;
+import com.springbook.bookapp.entity.BookDTO;
 import com.springbook.bookapp.repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.springbook.bookapp.entity.BookMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
-    @Autowired
-    public BookServiceImpl(BookRepository theBookRepository) {
-        bookRepository = theBookRepository;
+    public BookServiceImpl(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     @Override
-    public List<Book> findAll() {
-        return bookRepository.findAllByOrderByTitleAsc();
+    public List<BookDTO> findAll() {
+        return bookRepository.findAll()
+                .stream()
+                .map(BookMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Book findById(int id) {
-        Optional<Book> result = bookRepository.findById(id);
-        return result.orElse(null);
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
     }
 
     @Override
-    public Book save(Book theBook) {
-        return bookRepository.save(theBook);
+    public Book save(BookDTO theBookDTO) {
+        Book book = BookMapper.toEntity(theBookDTO);
+        return bookRepository.save(book);
     }
 
     @Override
     public void deleteById(int id) {
+        if (!bookRepository.existsById(id)) {
+            throw new RuntimeException("Book not found with id: " + id);
+        }
         bookRepository.deleteById(id);
     }
 }

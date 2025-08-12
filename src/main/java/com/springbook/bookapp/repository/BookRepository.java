@@ -2,6 +2,7 @@ package com.springbook.bookapp.repository;
 
 
 import com.springbook.bookapp.entity.Book;
+import com.springbook.bookapp.entity.BookDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
