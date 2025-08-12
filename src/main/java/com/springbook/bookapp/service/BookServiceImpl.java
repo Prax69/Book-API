@@ -2,28 +2,27 @@ package com.springbook.bookapp.service;
 
 import com.springbook.bookapp.entity.Book;
 import com.springbook.bookapp.entity.BookDTO;
+import com.springbook.bookapp.mapper.UniversalMapper;
 import com.springbook.bookapp.repository.BookRepository;
-import com.springbook.bookapp.entity.BookMapper;
+import com.springbook.bookapp.mapper.UniversalMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final UniversalMapper mapper;
 
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, UniversalMapper mapper) {
         this.bookRepository = bookRepository;
+        this.mapper = mapper;
     }
 
     @Override
     public List<BookDTO> findAll() {
-        return bookRepository.findAll()
-                .stream()
-                .map(BookMapper::toDTO)
-                .collect(Collectors.toList());
+        return mapper.mapList(bookRepository.findAll(), BookDTO.class);
     }
 
     @Override
@@ -34,7 +33,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book save(BookDTO theBookDTO) {
-        Book book = BookMapper.toEntity(theBookDTO);
+        Book book = mapper.map(theBookDTO, Book.class);
         return bookRepository.save(book);
     }
 

@@ -1,26 +1,28 @@
+// redundant and should be ignored
+// This file is intentionally left untouched for learning purposes
+
 package com.springbook.bookapp.entity;
 
+import com.springbook.bookapp.mapper.UniversalMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class BookMapper {
 
-    public static BookDTO toDTO (Book book) {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setId(book.getId());
-        bookDTO.setTitle(book.getTitle());
-        bookDTO.setAuthor(book.getAuthor());
-        bookDTO.setPublicationYear(book.getPublicationYear());
 
-        return bookDTO;
+    @Autowired
+    private static  UniversalMapper universalMapper ;
+
+    public BookMapper(UniversalMapper universalMapper) {
+        BookMapper.universalMapper = universalMapper;
     }
 
-    public static Book toEntity (BookDTO bookDTO) {
-        Book book = new Book();
-        book.setId(bookDTO.getId());
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setPublicationYear(bookDTO.getPublicationYear());
+    public static BookDTO toDTO(Book book) {
+        return universalMapper.map(book, BookDTO.class);
+    }
 
-        return book;
+    public static Book toEntity(BookDTO bookDTO) {
+        return universalMapper.map(bookDTO, Book.class);
     }
 }
